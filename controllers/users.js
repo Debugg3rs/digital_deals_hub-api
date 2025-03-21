@@ -11,9 +11,7 @@ export const registerUser = async (req, res) => {
   }
 
   // Check if user does not exist already
-  const user = await UserModel.findOne({
-    $or: [{ username: value.username }, { email: value.email }],
-  });
+  const user = await UserModel.findOne({ email: value.email });
   if (user) {
     return res.status(409).json("User already exists!");
   }
@@ -66,9 +64,7 @@ export const loginUser = async (req, res) => {
   }
 
   //Find matching user record in database
-  const user = await UserModel.findOne({
-    $or: [{ username: value.username }, { email: value.email }],
-  });
+  const user = await UserModel.findOne({ email: value.email });
   if (!user) {
     return res.status(404).json("User does not exist!");
   }
