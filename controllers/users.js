@@ -1,5 +1,5 @@
-import registerUserValidator from "../validators/users.js";
-import loginUserValidator from "../validators/users.js";
+import {registerUserValidator,loginUserValidator} from "../validators/users.js";
+import config from "../utils/config.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -78,7 +78,7 @@ export const loginUser = async (req, res) => {
   }
   //Generate access token for user
 
-  const accessToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
+  const accessToken = jwt.sign({ id: user.id }, config.JWT_SECRET_KEY, {
     expiresIn: "24h",
   });
   //Return response
