@@ -1,0 +1,3 @@
+MONGODB_URI='mongodb+srv://digital_deals_hub-api:0LQLEMBKLV6Cn8Lr@library-api.11ync.mongodb.net/?retryWrites=true&w=majority&appName=library-api'
+
+JWT_SECRET_KEY='0195b!@45e-35&e(5-7ce7-96]6b-034aef[9c3537'
