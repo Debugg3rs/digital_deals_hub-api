@@ -1,6 +1,8 @@
 import registerUserValidator from "../validators/users.js";
-
+import loginUserValidator from "../validators/users.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
 
 //Register a user controller
 export const registerUser = async (req, res) => {
