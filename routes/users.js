@@ -13,8 +13,8 @@ const userRouter = Router();
 //Define routes
 userRouter.post("/users/register", registerUser);
 userRouter.get("/users", getAllUsers);
-userRouter.get("/users:id", getUser);
+userRouter.get("/users/:id", getUser);
 userRouter.post("/users/login", loginUser);
-userRouter.patch("/users", updateUser);
+userRouter.patch("/users/:id", updateUser);
 
 export default userRouter;
