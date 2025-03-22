@@ -1,24 +1,28 @@
-import{Schema,model} from 'mongoose';
+import { Schema, model } from 'mongoose';
 
-const userShema = new Schema(
+const userSchema = new Schema(
     {
         name: {
-            type: String,required: [true,'Name is required'],
+            type: String,
+            required: true,
         },
-        email:{
-            type: String,required: [true,'Email is required'],
+        email: {
+            type: String,
+            required: true,
             unique: true,
         },
         password: {
-            type: String,required: [true,'Password is required'],
+            type: String,
+            required: true,
         },
-        role:{
-            type: String,enum: ['user','vendor'],
+        role: {
+            type: String,
+            enum: ['user', 'vendor', 'superadmin'],
             default: 'user',
             required: true,
         },
     },
-    {timestamps: true}
+    { timestamps: true }
 );
 
-export const User = model('User,',userSchema);
+export const User = model('User', userSchema);
