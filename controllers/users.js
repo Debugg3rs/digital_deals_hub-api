@@ -1,8 +1,11 @@
-import {registerUserValidator,loginUserValidator} from "../validators/users.js";
+import {
+  registerUserValidator,
+  loginUserValidator,
+} from "../validators/users.js";
+import { UserModel } from "../models/user.js";
 import config from "../utils/config.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
 
 //Register a user controller
 export const registerUser = async (req, res) => {
