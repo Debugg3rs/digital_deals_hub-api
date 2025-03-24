@@ -12,6 +12,6 @@ const advertSchema = new Schema({
 });
 
 
-export const advertModel = model('Advert', advertSchema)
+export const AdvertModel = model('Advert', advertSchema)
 
 
