@@ -1,6 +1,7 @@
 import {
   registerUserValidator,
   loginUserValidator,
+  changeUserRoleValidator,
 } from "../validators/users.js";
 import { UserModel } from "../models/user.js";
 import config from "../utils/config.js";
@@ -18,7 +19,7 @@ export const registerUser = async (req, res) => {
   // Check if user does not exist already
   const user = await UserModel.findOne({ email: value.email });
   if (user) {
-    return res.status(409).json("User already exists!");
+    return res.status(409).json({ error: "User already exists!" });
   }
 
   // Hash plaintext password using asynchronous method
@@ -30,7 +31,7 @@ export const registerUser = async (req, res) => {
     password: hashedPassword,
   });
   // Return response
-  res.status(201).json("User registered successfully");
+  res.status(201).json({ message: "User registered successfully" });
 };
 
 //Get all users  controller
@@ -38,7 +39,7 @@ export const getAllUsers = async (req, res) => {
   //Fetch all users from the database
   const allUsers = await UserModel.find();
   if (!allUsers) {
-    return res.status(404).json({ message: "No users found!" });
+    return res.status(404).json({ error: "No users found!" });
   }
   //return response
   res
@@ -52,7 +53,7 @@ export const getUser = async (req, res) => {
   const singleUser = await UserModel.findById(req.params.id);
 
   if (!singleUser) {
-    return res.status(404).json({ message: "User does not exist!" });
+    return res.status(404).json({ error: "User does not exist!" });
   }
   //return response
   res
@@ -71,13 +72,13 @@ export const loginUser = async (req, res) => {
   //Find matching user record in database
   const user = await UserModel.findOne({ email: value.email });
   if (!user) {
-    return res.status(404).json("User does not exist!");
+    return res.status(404).json({ error: "User does not exist!" });
   }
 
   //Compare incoming password with saved password
   const correctPassword = bcrypt.compareSync(value.password, user.password);
   if (!correctPassword) {
-    return res.status(401).json("Invalid Credentials!");
+    return res.status(401).json({ error: "Invalid Credentials!" });
   }
   //Generate access token for user
 
@@ -85,17 +86,26 @@ export const loginUser = async (req, res) => {
     expiresIn: "24h",
   });
   //Return response
-  res.status(200).json({ accessToken });
+  res.status(200).json({
+    accessToken,
+    user: { id: user.id, role: user.role, name: user.name },
+  });
 };
 
-//Update a user controller
-export const updateUser = async (req, res) => {
+//Change user role controller
+export const changeUserRole = async (req, res) => {
   //Validate request body
-  const { error, value } = updateUserValidator.validate(req.body);
+  const { error, value } = changeUserRoleValidator.validate(req.body);
   if (error) {
     return res.status(422).json(error);
   }
-  //Update user in database
+  //check if user exists
+  const user = await UserModel.findById(req.params.id);
+  if (!user) {
+    return res.status(404).json({ error: "User not found!" });
+  }
+  console.log(value);
+  //Update user role in database
   const result = await UserModel.findByIdAndUpdate(req.params.id, value, {
     new: true,
   });
