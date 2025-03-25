@@ -14,7 +14,7 @@ export const isAuthorized = (roles) => {
     if (roles?.includes(user.role)) {
       next();
     } else {
-      res.status(403).json("You are not authorized");
+      res.status(403).json({ error: "You are not authorized" });
     }
   };
 };

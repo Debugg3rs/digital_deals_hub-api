@@ -11,6 +11,15 @@ const advertSchema = new Schema({
     timestamps: true
 });
 
+advertSchema.set('toJSON', {
+    versionKey: false,
+    transform: function (doc, ret) {
+        ret.id = ret._id.toString();
+        delete ret._id;
+        delete ret.userId;
+    },
+  });
+
 
 export const AdvertModel = model('Advert', advertSchema)
 
