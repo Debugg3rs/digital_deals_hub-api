@@ -1,12 +1,21 @@
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 5000;
+const MONGODB_URI = process.env.MONGODB_URI;
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
+const JWT_VALIDITY = process.env.JWT_VALIDITY;
+const NODE_ENV = process.env.NODE_ENV;
+const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME;
+const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY;
+const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET;
 
-const MONGODB_URI = process.env.MONGODB_URI
-
-const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
 
 
 export default {
   PORT,
   MONGODB_URI,
-  JWT_SECRET_KEY
+  JWT_SECRET_KEY,
+  NODE_ENV,
+  JWT_VALIDITY,
+  CLOUDINARY_CLOUD_NAME,
+  CLOUDINARY_API_KEY,
+  CLOUDINARY_API_SECRET
 }

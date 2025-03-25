@@ -7,6 +7,7 @@ import { UserModel } from "../models/user.js";
 import config from "../utils/config.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { isAuthuenticated } from "../middlewares/auth.js";
 
 //Register a user controller
 export const registerUser = async (req, res) => {
@@ -83,12 +84,17 @@ export const loginUser = async (req, res) => {
   //Generate access token for user
 
   const accessToken = jwt.sign({ id: user.id }, config.JWT_SECRET_KEY, {
-    expiresIn: "24h",
+    expiresIn: config.JWT_VALIDITY,
   });
   //Return response
   res.status(200).json({
     accessToken,
-    user: { id: user.id, role: user.role, name: user.name },
+    user: { 
+      id: user.id,
+      role: user.role,
+      name: user.name,
+      isAuthuenticated: true
+    },
   });
 };
 
