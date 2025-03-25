@@ -1,10 +1,13 @@
 import { Router } from "express";
 import {
   addAdvert,
+  deleteVendorAdvert,
   getAdvertById,
   getAllAdverts,
   getVendorAdvertById,
   getVendorAdverts,
+  updateAdvertImage,
+  updateVendorAdvert,
 } from "../controllers/adverts.js";
 import { isAuthorized, isAuthuenticated } from "../middlewares/auth.js";
 import { advertImageUpload } from "../middlewares/upload.js";
@@ -45,6 +48,28 @@ advertRouter.post(
   isAuthorized(["vendor", "superadmin"]),
   advertImageUpload.single("image"),
   addAdvert
+);
+
+advertRouter.put(
+  '/adverts/vendor/:id',
+  isAuthuenticated,
+  isAuthorized(['vendor', 'superadmin']),
+  updateVendorAdvert
+);
+
+advertRouter.patch(
+  "/adverts/vendor/:id",
+  isAuthuenticated,
+  isAuthorized(["vendor", "superadmin"]),
+  advertImageUpload.single("image"),
+  updateAdvertImage
+);
+
+advertRouter.delete(
+  "/adverts/vendor/:id",
+  isAuthuenticated,
+  isAuthorized(["vendor", "superadmin"]),
+  deleteVendorAdvert
 );
 
 export default advertRouter;
