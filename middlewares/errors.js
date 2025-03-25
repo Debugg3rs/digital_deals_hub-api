@@ -15,71 +15,40 @@ export const unknownEndPoint = (req, res) => {
 };
 
 export const errorHandler = (err, req, res, next) => {
-  logger.info(`${err.name}: ${err.message}`);
+  logger.info(`${err?.name}: ${err.message}`);
 
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "error";
 
   // Mongoose duplicate key error
-  if (err.name === "MongoServerError" && err.code === 11000) {
+  if (err.code === 11000) {
     const value = Object.keys(err.keyValue)[0];
     err.message = `expected \`${value}\` to be unique`;
     err.statusCode = 400;
-  }
-
-  // if (err.code === 11000) {
-
-  //   const value = err.message.match(/(["'])(\\?.)*?\1/)[0]
-  //   err.message = `Duplicate field value: ${value}. Please use another value`
-  //   err.statusCode = 400
-  // }
-
-  // Mongoose validation error
-  if (err.name === "ValidationError") {
+  }else if (err.name === "ValidationError") {
+    // Mongoose validation error
     const errors = Object.values(err.errors).map((val) => val.message);
     err.message = `Invalid input data. ${errors.join(". ")}`;
     err.statusCode = 400;
-  }
-
-  // Mongoose CastError (invalid ID)
-  if (err.name === "CastError") {
+  }else if (err.name === "CastError") {
+    // Mongoose CastError (invalid ID)
     err.message = `malformatted id: ${err.value}`;
     err.statusCode = 400;
-  }
-
-  // Missing or invalid token
-  if (err.name === "JsonWebTokenError") {
+  }else if (err.name === "JsonWebTokenError") {
+    // Missing or invalid token
     err.message = "token invalid";
     err.statusCode = 401;
-  }
-
-  // express-jwt errors
-  if (err.code === "credentials_required") {
+  }else if (err.code === "credentials_required") {
+    // express-jwt errors
     err.message = "Authorization token is required";
     err.statusCode = 401;
-  }
-
-  if (err.inner.name === "TokenExpiredError" || err.code === "invalid_token") {
+  }else if (err?.inner.name === "TokenExpiredError" || err.code === "invalid_token") {
     err.message = "JWT token expired";
     err.statusCode = 401;
-  }
-
-  // express-jwt errors
-  if (err.name === "ForbiddenError") {
+  }else if (err.name === "ForbiddenError") {
+    // express-jwt errors
     err.message = "Access denied";
     err.statusCode = 403;
-  }
-
-  
-
-
-
-  // express-jwt errors
-
-  // expired token
-  if (err.name === "TokenExpiredError") {
-    err.message = "token expired";
-    err.statusCode = 401;
   }
 
   // Test error response

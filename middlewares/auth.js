@@ -1,8 +1,9 @@
+import config from "../utils/config.js";
 import { expressjwt } from "express-jwt";
 import { UserModel } from "../models/user.js";
 
 export const isAuthuenticated = expressjwt({
-  secret: process.env.JWT_SECRET_KEY,
+  secret: config.JWT_SECRET_KEY,
   algorithms: ["HS256"],
 });
 
