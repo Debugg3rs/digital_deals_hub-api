@@ -15,6 +15,7 @@ export const unknownEndPoint = (req, res) => {
 };
 
 export const errorHandler = (err, req, res, next) => {
+  logger.info(err);
   logger.info(`${err?.name}: ${err.message}`);
 
   err.statusCode = err.statusCode || 500;
@@ -42,13 +43,16 @@ export const errorHandler = (err, req, res, next) => {
     // express-jwt errors
     err.message = "Authorization token is required";
     err.statusCode = 401;
-  }else if (err?.inner.name === "TokenExpiredError" || err.code === "invalid_token") {
+  }else if (err?.inner?.name === "TokenExpiredError" || err.code === "invalid_token") {
     err.message = "JWT token expired";
     err.statusCode = 401;
   }else if (err.name === "ForbiddenError") {
     // express-jwt errors
     err.message = "Access denied";
     err.statusCode = 403;
+  }else if (err.name === "ReferenceError") {
+    err.message = err.message;
+    err.statusCode = 400;
   }
 
   // Test error response
