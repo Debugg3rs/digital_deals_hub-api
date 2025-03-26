@@ -35,7 +35,7 @@ export const getAllAdverts = async (req, res) => {
   if (filterType && filter) {
     if (filterType === "lte" || filterType === "gte") {
       const price = parseInt(filter, 10);
-      if (!isNaN(amount)) {
+      if (!isNaN(price)) {
         query.price = { [filterType === "lte" ? "$lte" : "$gte"]: price };
       }
     } else if (filterType === "title") {
@@ -50,7 +50,7 @@ export const getAllAdverts = async (req, res) => {
   const sorting = sort ? { [sort]: order === "desc" ? -1 : 1 } : {};
   limit = parseInt(limit);
 
-  // Count total expenses for the user
+  // Count total adverts for the user
   const totalAdverts = await AdvertModel.countDocuments(query);
   const message =
     totalAdverts > 0
@@ -104,7 +104,7 @@ export const getVendorAdverts = async (req, res) => {
   if (filterType && filter) {
     if (filterType === "lte" || filterType === "gte") {
       const price = parseInt(filter, 10);
-      if (!isNaN(amount)) {
+      if (!isNaN(price)) {
         query.price = { [filterType === "lte" ? "$lte" : "$gte"]: price };
       }
     } else if (filterType === "title") {
@@ -119,7 +119,7 @@ export const getVendorAdverts = async (req, res) => {
   const sorting = sort ? { [sort]: order === "desc" ? -1 : 1 } : {};
   limit = parseInt(limit);
 
-  // Count total expenses for the user
+  // Count total adverts for the user
   const totalAdverts = await AdvertModel.countDocuments(query);
   const message =
     totalAdverts > 0

@@ -14,6 +14,7 @@ const userSchema = new Schema(
         password: {
             type: String,
             required: true,
+            select: false
         },
         role: {
             type: String,
@@ -21,8 +22,22 @@ const userSchema = new Schema(
             default: 'user',
             required: true,
         },
+        verified: {type: Boolean, default: false},
+        mailCode: { type: Number },
+        mailCodeExpires: { type: Date }
     },
     { timestamps: true }
 );
+
+userSchema.set("toJSON", {
+    transform: (doc, ret) => {
+        ret.id = ret._id.toString();
+        delete ret._id;
+        delete ret.__v;
+        delete ret.password;
+    },
+});
+
+
 
 export const UserModel = model('User', userSchema);
