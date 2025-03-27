@@ -15,7 +15,6 @@ export const unknownEndPoint = (req, res) => {
 };
 
 export const errorHandler = (err, req, res, next) => {
-  logger.info(err);
   logger.info(`${err?.name}: ${err.message}`);
 
   err.statusCode = err.statusCode || 500;

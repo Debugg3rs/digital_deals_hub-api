@@ -2,6 +2,8 @@ import { Router } from "express";
 import {
   addAdvert,
   deleteVendorAdvert,
+  exportAdvertsToExcel,
+  exportAdvertsToPDF,
   getAdvertById,
   getAllAdverts,
   getVendorAdvertById,
@@ -19,6 +21,20 @@ advertRouter.get(
   isAuthuenticated,
   isAuthorized(["user", "superadmin"]),
   getAllAdverts
+);
+
+advertRouter.get(
+  "/adverts/export/excel",
+  isAuthuenticated,
+  isAuthorized(['vendor', 'superadmin']),
+  exportAdvertsToExcel
+);
+
+advertRouter.get(
+  "/adverts/export/pdf",
+  isAuthuenticated,
+  isAuthorized(["vendor", "superadmin"]),
+  exportAdvertsToPDF
 );
 
 advertRouter.get(

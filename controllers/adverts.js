@@ -1,9 +1,15 @@
+import Exceljs from "exceljs";
+import PDFDocument from "pdfkit-table";
+// import "pdfkit-table";
 import { AdvertModel } from "../models/advert.js";
+import { UserModel } from "../models/user.js";
 import {
   addAdvertValidator,
   updateAdvertImageValidator,
   updateAdvertValidator,
 } from "../validators/adverts.js";
+
+const { Workbook } = Exceljs;
 
 export const addAdvert = async (req, res) => {
   const { error, value } = addAdvertValidator.validate({
@@ -242,6 +248,93 @@ export const deleteVendorAdvert = async (req, res) => {
 
   await AdvertModel.findByIdAndDelete(advert.id);
   res.status(204).end();
+};
+
+// Export vendors' adverts data to excel
+export const exportAdvertsToExcel = async (req, res) => {
+  const user = await UserModel.findById(req.auth.id);
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
+  const adverts = await AdvertModel.find({ userId: user.id });
+
+  const workBook = new Workbook();
+  const workSheet = workBook.addWorksheet("advert");
+
+  workSheet.columns = [
+    { header: "ID", key: "id", width: 25 },
+    { header: "Title", key: "title", width: 30 },
+    { header: "Description", key: "description", width: 35 },
+    { header: "Category", key: "category", width: 20 },
+    { header: "Price", key: "price", width: 15 },
+    { header: "Image", key: "image", width: 20 },
+    { header: "Created Date", key: "createdAt", width: 20 },
+  ];
+
+  adverts.forEach((advert) => workSheet.addRow(advert));
+
+  res.setHeader(
+    "Content-Type",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  );
+  res.setHeader("Content-Disposition", "attachment; filename=advert.xlsx");
+
+  await workBook.xlsx.write(res);
+
+  res.end();
+};
+
+// export to pad
+export const exportAdvertsToPDF = async (req, res) => {
+  const user = await UserModel.findById(req.auth.id);
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
+  const adverts = await AdvertModel.find({ userId: user.id });
+
+  const doc = new PDFDocument({ margin: 30, size: "A4" });
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader("Content-Disposition", "attachment; filename=advert.pdf");
+
+  doc.pipe(res);
+
+  doc
+    .font("Helvetica-Bold")
+    .fontSize(18)
+    .text(`${user.name}'s Adverts Report`, { align: "center" })
+  doc.fontSize(14)
+    .font("Helvetica")
+    .text(`As at ${new Date}`, { align: "center" }).moveDown(2);
+
+  const table = {
+    headers: [
+      "ID",
+      "Title",
+      "Description",
+      "Category",
+      "Price (GHS)",
+      "Image",
+      "Created At",
+    ],
+    rows: adverts.map((advert) => [
+      advert.id,
+      advert.title,
+      advert.description,
+      advert.category,
+      advert.price,
+      advert.image,
+      advert.createdAt,
+    ]),
+  };
+
+  // Set table
+  await doc.table(table, {
+    prepareHeader: () => doc.font("Helvetica-Bold").fontSize(12),
+    prepareRow: (row, i) => doc.font("Helvetica").fontSize(10),
+    columnSpacing:10
+  });
+
+  doc.end();
 };
 
 // future consideration
