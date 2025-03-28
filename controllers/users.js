@@ -184,7 +184,9 @@ export const changeUserPassword = async (req, res) => {
 // email confirmation
 export const confirmNewUserEmail  = async(req, res) => {
   const { error, value } = confirmUserEmailValidator.validate(req.body);
-  if (error) return res.status(422).json(error);
+  if (error) {
+    return res.status(422).json(error);
+  }
 
   // find user
   const user = await UserModel.findOne({
@@ -221,7 +223,7 @@ export const forgotPassword = async (req, res) => {
       .status(200)
       .json({
         message:
-          "If your email exists in our system, you will receive a reset link",
+          "If your email exists in our system, you will receive reset code",
       });
   }
 
@@ -250,7 +252,7 @@ export const forgotPassword = async (req, res) => {
 
   res.status(200).json({
     message:
-      "If your email exists in our system, you will receive a reset link",
+      "If your email exists in our system, you will receive reset code",
   });
 }
 

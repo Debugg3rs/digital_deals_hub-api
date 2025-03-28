@@ -202,6 +202,12 @@ export const updateVendorAdvert = async (req, res) => {
     return res.status(404).json({ error: "Advert not found" });
   }
 
+  if (advert.userId?.toString() !== req.auth.id) {
+    return res.status(403).json({
+      error: "You are not authorized to update this advert",
+    });
+  }
+
   const result = await AdvertModel.findByIdAndUpdate(advert.id, value, {
     new: true,
   });
@@ -228,6 +234,12 @@ export const updateAdvertImage = async (req, res) => {
     return res.status(404).json({ error: "Advert not found" });
   }
 
+  if (advert.userId?.toString() !== req.auth.id) {
+    return res.status(403).json({
+      error: "You are not authorized to update this advert",
+    });
+  }
+
   const result = await AdvertModel.findByIdAndUpdate(advert.id, value, {
     new: true,
   });
@@ -244,6 +256,12 @@ export const deleteVendorAdvert = async (req, res) => {
   });
   if (!advert) {
     return res.status(404).json({ error: "Advert not found" });
+  }
+
+  if (advert.userId?.toString() !== req.auth.id) {
+    return res.status(403).json({
+      error: "You are not authorized to delete this advert"
+    });
   }
 
   await AdvertModel.findByIdAndDelete(advert.id);

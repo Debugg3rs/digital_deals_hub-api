@@ -12,8 +12,11 @@ const transporter = createTransport({
   },
 });
 
-export const mailCode = Math.floor(100000 + Math.random() * 900000);
-export const mailCodeExpires = Date.now() + 3600000;
+const generatemailCode = () => Math.floor(100000 + Math.random() * 900000);
+const generatemailCodeExpires = () => Date.now() + 3600000;
+
+export const mailCode = generatemailCode();
+export const mailCodeExpires = generatemailCodeExpires()
 
 const htmlContent = {
   verifyEmail: (name) => {
